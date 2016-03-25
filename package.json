@@ -1,7 +1,8 @@
 {
   "scripts": {
     "test": "flow",
-    "build": "flow && babel src --out-dir build"
+    "build": "flow && babel src --out-dir build",
+    "start": "node build/main.js"
   },
   "dependencies": {
     "slate-irc": "^0.8.1"

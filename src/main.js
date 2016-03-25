@@ -1,6 +1,9 @@
 // @flow
-const irc = require('slate-irc');
-const tls = require('tls');
+import irc from 'slate-irc'
+import tls from 'tls'
+
+const log = (msg) => console.log(`\x1b[36m${msg}\x1b[0m`);
+log('Starting hyeonbot ...');
 
 // Establish connection
 const client = (() => {
@@ -21,10 +24,10 @@ const client = (() => {
 process.on('SIGINT', () => {
   const message = 'See you next time!';
   client.quit(message);
-  console.log(`\n\n\x1b[36m${message}\x1b[0m`);
+  log('\n\n' + message);
 });
 
 // IO
-client.on('message', (msg) => {
-  console.log(msg);
+client.on('message', ({ from: user, to: channel, message }) => {
+  console.log(`${channel} <@${user}> ${message}`);
 });
