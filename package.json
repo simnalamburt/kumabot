@@ -1,5 +1,11 @@
 {
+  "scripts": {
+    "test": "flow"
+  },
   "dependencies": {
     "slate-irc": "^0.8.1"
+  },
+  "devDependencies": {
+    "flow-bin": "^0.22.1"
   }
 }

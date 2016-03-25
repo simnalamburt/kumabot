@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+// @flow
 const irc = require('slate-irc');
 const tls = require('tls');
 

@@ -4,5 +4,5 @@
 ```bash
 npm i
 
-./do
+npm t         # Type check
 ```
