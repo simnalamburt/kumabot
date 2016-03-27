@@ -1,38 +1,53 @@
 // @flow
-import irc from 'slate-irc'
+import IRC from 'slate-irc'
 import tls from 'tls'
-// $FlowIssue: Import node-kakao from the local package
-import kakao from 'kakao'
-
+// $FlowIssue: Use a local installed package
+import Kakao from 'kakao'
 import { sKey, duuid } from '../config.json'
 
+console.log('\x1b[36mStarting hyeonbot ...\x1b[0m');
 
-const log = (msg) => console.log(`\x1b[36m${msg}\x1b[0m`);
-log('Starting hyeonbot ...');
 
-// Establish connection
-const client = (() => {
+//
+// Establish Kakaotalk & IRC connection
+//
+let irc, kakao;
+{
   const stream = tls.connect({
-    host: 'irc.uriirc.org',
-    port: 16664,
+    host: 'irc.uriirc.org', port: 16664,
     rejectUnauthorized: false,
   });
 
-  const client = irc(stream);
-  client.nick('\u0002\u0002');
-  client.user('hyeonbot', '김지현의 카카오톡-IRC 연결봇');
-  client.join('#botworld');
-  return client;
-})();
+  irc = IRC(stream);
+  irc.nick('\u0002\u0002');
+  irc.user('hyeonbot', '김지현의 카카오톡-IRC 연결봇');
+  irc.join('#botworld');
+}
+{
+  kakao = new Kakao(sKey, duuid);
+  kakao.login().then(server => {
+    console.log(`\x1b[32mSigned in to Kakaltalk successfully\x1b[0m - ${server.host}:${server.port}`)
+  });
+}
 
 // Handle ^C gracefully
 process.on('SIGINT', () => {
   const message = 'See you next time!';
-  client.quit(message);
-  log('\n\n' + message);
+  irc.quit(message);
+  kakao.close();
+  console.log(`\n\x1b[36m${message}\x1b[0m`);
+  process.exit();
 });
 
 // IO
-client.on('message', ({ from: user, to: channel, message }) => {
+irc.on('message', ({ from: user, to: channel, message }) => {
   console.log(`${channel} <@${user}> ${message}`);
+
+  if (message === '이리온') { irc.send(channel, '냐옹'); }
+});
+
+kakao.on('message', ({ user: { id, name }, chat_id, message, time }) => {
+  console.log(`[${chat_id}] ${time.getHours()}:${time.getMinutes()}:${time.getSeconds()} ${name}(${id}) ${message}`);
+
+  if (message === '이리온') { kakao.write(chat_id, '냐옹'); }
 });

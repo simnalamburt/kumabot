@@ -10,6 +10,7 @@ npm link kakao  # Link local node-kakao to this repo
 
 npm t           # Type check
 npm run build   # Type check + Babel
+npm run watch   # Run babel in watch mode
 
 # Start hyeonbot
 npm start
