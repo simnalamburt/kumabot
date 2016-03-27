@@ -1,6 +1,11 @@
 // @flow
 import irc from 'slate-irc'
 import tls from 'tls'
+// $FlowIssue: Import node-kakao from the local package
+import kakao from 'kakao'
+
+import { sKey, duuid } from '../config.json'
+
 
 const log = (msg) => console.log(`\x1b[36m${msg}\x1b[0m`);
 log('Starting hyeonbot ...');
