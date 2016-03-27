@@ -4,14 +4,7 @@ import tls from 'tls'
 // $FlowIssue: Use a local installed package
 import Kakao from 'kakao'
 import { sKey, duuid, table } from '../config.json'
-
-
-// TODO: Move this codes
-function invert(obj) {
-  let result = {};
-  Object.keys(obj).forEach(key => result[obj[key]] = key);
-  return result;
-};
+import { invert } from './utils.js'
 
 
 //
@@ -20,20 +13,21 @@ function invert(obj) {
 let irc, kakao;
 console.log('\x1b[36mStarting hyeonbot ...\x1b[0m');
 {
-  const stream = tls.connect({
-    host: 'irc.uriirc.org', port: 16664,
-    rejectUnauthorized: false,
-  });
+  const option = {
+    host: 'irc.uriirc.org',
+    port: 16664,
+    rejectUnauthorized: false
+  };
 
-  irc = IRC(stream);
+  irc = IRC(tls.connect(option));
   irc.nick('\ufeff');
   irc.user('hyeonbot', '김지현의 카카오톡-IRC 연결봇');
   Object.keys(table).forEach(channel => irc.join(channel));
 }
 {
   kakao = new Kakao(sKey, duuid);
-  kakao.login().then(server => {
-    console.log(`\x1b[32mSigned in to Kakaltalk successfully\x1b[0m - ${server.host}:${server.port}`)
+  kakao.login().then(({ host, port }) => {
+    console.log(`Connected with \x1b[32m${host}:${port}\x1b[0m`);
   });
 }
 
