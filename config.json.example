@@ -1,4 +1,7 @@
 {
   "sKey": "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
   "duuid": "0123456789ABCDEF0123456789ABCDEF01234567"
+  "table": {
+    "#hello": 123456789012345
+  }
 }

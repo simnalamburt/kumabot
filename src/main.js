@@ -3,15 +3,22 @@ import IRC from 'slate-irc'
 import tls from 'tls'
 // $FlowIssue: Use a local installed package
 import Kakao from 'kakao'
-import { sKey, duuid } from '../config.json'
+import { sKey, duuid, table } from '../config.json'
 
-console.log('\x1b[36mStarting hyeonbot ...\x1b[0m');
+
+// TODO: Move this codes
+function invert(obj) {
+  let result = {};
+  Object.keys(obj).forEach(key => result[obj[key]] = key);
+  return result;
+};
 
 
 //
 // Establish Kakaotalk & IRC connection
 //
 let irc, kakao;
+console.log('\x1b[36mStarting hyeonbot ...\x1b[0m');
 {
   const stream = tls.connect({
     host: 'irc.uriirc.org', port: 16664,
@@ -21,7 +28,7 @@ let irc, kakao;
   irc = IRC(stream);
   irc.nick('\u0002\u0002');
   irc.user('hyeonbot', '김지현의 카카오톡-IRC 연결봇');
-  irc.join('#botworld');
+  Object.keys(table).forEach(channel => irc.join(channel));
 }
 {
   kakao = new Kakao(sKey, duuid);
@@ -30,24 +37,31 @@ let irc, kakao;
   });
 }
 
+
+//
+// IO
+//
+irc.on('message', ({ from: name, to: channel, message }) => {
+  if (channel in table) {
+    kakao.write(table[channel], `${name}) ${message}`);
+  }
+});
+
+const kakao_irc = Object.freeze(invert(table));
+kakao.on('message', ({ user: { name }, chat_id, message }) => {
+  if (chat_id in kakao_irc) {
+    irc.send(kakao_irc[chat_id], `<${name}> ${message}`);
+  }
+});
+
+
+//
 // Handle ^C gracefully
-process.on('SIGINT', () => {
+//
+process.on('SIGINT', _ => {
   const message = 'See you next time!';
   irc.quit(message);
   kakao.close();
   console.log(`\n\x1b[36m${message}\x1b[0m`);
   process.exit();
-});
-
-// IO
-irc.on('message', ({ from: user, to: channel, message }) => {
-  console.log(`${channel} <@${user}> ${message}`);
-
-  if (message === '이리온') { irc.send(channel, '냐옹'); }
-});
-
-kakao.on('message', ({ user: { id, name }, chat_id, message, time }) => {
-  console.log(`[${chat_id}] ${time.getHours()}:${time.getMinutes()}:${time.getSeconds()} ${name}(${id}) ${message}`);
-
-  if (message === '이리온') { kakao.write(chat_id, '냐옹'); }
 });
