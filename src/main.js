@@ -26,7 +26,7 @@ console.log('\x1b[36mStarting hyeonbot ...\x1b[0m');
   });
 
   irc = IRC(stream);
-  irc.nick('\u0002\u0002');
+  irc.nick('\ufeff');
   irc.user('hyeonbot', '김지현의 카카오톡-IRC 연결봇');
   Object.keys(table).forEach(channel => irc.join(channel));
 }
@@ -43,14 +43,16 @@ console.log('\x1b[36mStarting hyeonbot ...\x1b[0m');
 //
 irc.on('message', ({ from: name, to: channel, message }) => {
   if (channel in table) {
-    kakao.write(table[channel], `${name}) ${message}`);
+    const sanitized = name.split('').join('\ufeff');
+    kakao.write(table[channel], `${sanitized}» ${message}`);
   }
 });
 
 const kakao_irc = Object.freeze(invert(table));
 kakao.on('message', ({ user: { name }, chat_id, message }) => {
   if (chat_id in kakao_irc) {
-    irc.send(kakao_irc[chat_id], `<${name}> ${message}`);
+    const sanitized = name.split('').join('\x0f');
+    irc.send(kakao_irc[chat_id], `<${sanitized}> ${message}`);
   }
 });
 
