@@ -51,7 +51,9 @@ kakao.on('message', ({ user: { name }, chat_id, message }) => {
 
   if (chat_id in kakao_irc) {
     const sanitized = name.split('').join('\x0f');
-    irc.send(kakao_irc[chat_id], `<${sanitized}> ${message}`);
+    message.replace(/\r/g, '').split('\n').forEach(line => {
+      irc.send(kakao_irc[chat_id], `<${sanitized}> ${line}`);
+    });
   }
 });
 
