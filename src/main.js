@@ -43,7 +43,7 @@ irc.on('message', ({ from: name, to: channel, message }) => {
 });
 
 const kakao_irc = Object.freeze(invert(table));
-kakao.on('message', ({ user: { name }, chat_id, message }) => {
+kakao.on('message', ({ chat_id, user: { name }, message, type, attachment }) => {
   // Debug purpose
   if (message.includes('김젼봇')) {
     console.log(`<@\x1b[33m${name}\x1b[0m> ${message} \x1b[38;5;239m... ${chat_id}\x1b[0m`);
@@ -51,7 +51,20 @@ kakao.on('message', ({ user: { name }, chat_id, message }) => {
 
   if (chat_id in kakao_irc) {
     const sanitized = name.split('').join('\x0f');
-    message.replace(/\r/g, '').split('\n').forEach(line => {
+
+    let lines: Array<string>;
+    switch (type) {
+    case 1: // Text
+      lines = message.replace(/\r/g, '').split('\n');
+      break;
+    case 2: // Photo
+      lines = [`(사진) ${attachment.url}`];
+      break;
+    default: // Unknown type
+      lines = [];
+    }
+
+    lines.forEach(line => {
       irc.send(kakao_irc[chat_id], `<${sanitized}> ${line}`);
     });
   }
