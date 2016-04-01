@@ -43,10 +43,10 @@ irc.on('message', ({ from: name, to: channel, message }) => {
 });
 
 const kakao_irc = Object.freeze(invert(table));
-kakao.on('message', ({ chat_id, user: { name }, message, type, attachment }) => {
+kakao.on('message', ({ chat_id, user: { name, id: user_id }, message, type, attachment }) => {
   // Debug purpose
   if (message.includes('김젼봇')) {
-    console.log(`<@\x1b[33m${name}\x1b[0m> ${message} \x1b[38;5;239m... ${chat_id}\x1b[0m`);
+    console.log(`<@\x1b[33m${name}\x1b[0m \x1b[38;5;239m${user_id}\x1b[0m> ${message} \x1b[38;5;239m... ${chat_id}\x1b[0m`);
   }
 
   if (chat_id in kakao_irc) {
