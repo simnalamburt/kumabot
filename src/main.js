@@ -37,8 +37,12 @@ console.log('\x1b[36mStarting hyeonbot ...\x1b[0m');
 //
 irc.on('message', ({ from: name, to: channel, message }) => {
   if (channel in table) {
-    const sanitized = name.split('').join('\ufeff');
-    kakao.write(table[channel], `${sanitized}» ${message}`);
+    // 키워드 알림 방지
+    name = name.split('').join('\ufeff');
+    // IRC 메세지 스타일링에 쓰이는 글자들 카톡에 보낼때엔 삭제하기
+    message = message.replace(/[\x02\x1D\x1F\x16\x0F]|\x03\d{0,2}(?:,\d{0,2})?/g, '');
+
+    kakao.write(table[channel], `${name}» ${message}`);
   }
 });
 
