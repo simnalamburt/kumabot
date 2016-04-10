@@ -73,8 +73,6 @@ kakao.on('message', data => {
     }
 
     lines.forEach(line => irc.send(kakao_irc[chat_id], `<${sanitized}> ${line}`));
-
-
   }
 });
 
