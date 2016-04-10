@@ -6,7 +6,8 @@
     "start": "node build/main.js"
   },
   "dependencies": {
-    "slate-irc": "^0.8.1"
+    "slate-irc": "^0.8.1",
+    "websocket": "^1.0.22"
   },
   "devDependencies": {
     "babel-cli": "^6.6.5",
