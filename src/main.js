@@ -73,10 +73,9 @@ kakao.on('message', data => {
   }
 
   // chat.hyeon.me
-  if (wsconnection == null) { return; }
   if (chat_id !== spoqa) { return; }
   parse_kakao(data).forEach(line => {
-    wsconnection.sendUTF(JSON.stringify({
+    wsconnection && wsconnection.sendUTF(JSON.stringify({
       type: 'CreateMsg',
       channel: 'spoqa',
       msg: { userid: '-kakao-', usernick: name, txt: line },
