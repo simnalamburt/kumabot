@@ -1,5 +1,5 @@
 // @flow
-import IRC from 'slate-irc'
+import IRC from 'qbirc'
 import tls from 'tls'
 import UUID from 'uuid-js'
 import { client as WebSocketClient } from 'websocket'
