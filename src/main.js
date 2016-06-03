@@ -111,7 +111,7 @@ function daum_search(att: Object): string {
     // 날씨
     const w = entry.MA;
     if (att.V === 'weather' && w && w.length === 1 && w[0].T && w[0].TE) {
-      return `#${att.Q} - ${w[0].TE}°C ${w[0].T} ${att.L}`;
+      return `#${att.Q} - ${w[0].TE}°C ${w[0].T}`;
     }
 
     // 그 외에 검색결과가 하나일경우
