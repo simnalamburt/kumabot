@@ -17,7 +17,7 @@ let wsconnection;
 // Establish Kakaotalk & IRC connection
 //
 let irc, kakao;
-console.log('\x1b[36mStarting hyeonbot ...\x1b[0m');
+console.log('\x1b[36mStarting kumabot ...\x1b[0m');
 {
   const option = {
     host: 'irc.uriirc.org',
@@ -27,7 +27,7 @@ console.log('\x1b[36mStarting hyeonbot ...\x1b[0m');
 
   irc = IRC(tls.connect(option));
   irc.nick('\ufeff');
-  irc.user('hyeonbot', '김지현의 카카오톡-IRC 연결봇');
+  irc.user('kumabot', 'ㅇㅅㅇ');
   Object.keys(table).forEach(channel => irc.join(channel));
 }
 {
@@ -57,7 +57,7 @@ kakao.on('message', data => {
   const { chat_id, user: { name, id: user_id }, message } = data;
 
   // Debug purpose
-  if (message.includes('김젼봇')) {
+  if (message.includes('쿠마봇')) {
     console.log(`<@\x1b[33m${name}\x1b[0m \x1b[38;5;239m${user_id}\x1b[0m> ${message} \x1b[38;5;239m... ${chat_id}\x1b[0m`);
   }
 

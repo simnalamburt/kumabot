@@ -1,4 +1,4 @@
-김젼봇
+쿠마봇
 ========
 
 ```bash
@@ -12,6 +12,6 @@ npm t           # Type check
 npm run build   # Type check + Babel
 npm run watch   # Run babel in watch mode
 
-# Start hyeonbot
+# Start kumabot
 npm start
 ```
