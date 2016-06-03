@@ -9,10 +9,6 @@ import { sKey, duuid, table, friends, spoqa } from '../config.json'
 import { invert } from './utils.js'
 
 
-// chat.hyeon.me
-let wsconnection;
-
-
 //
 // Establish Kakaotalk & IRC connection
 //
@@ -71,17 +67,6 @@ kakao.on('message', data => {
     const sanitized = name.split('').join('\x0f');
     parse_kakao(data).forEach(line => irc.send(kakao_irc[chat_id], `<${sanitized}> ${line}`));
   }
-
-  // chat.hyeon.me
-  if (chat_id !== spoqa) { return; }
-  parse_kakao(data).forEach(line => {
-    wsconnection && wsconnection.sendUTF(JSON.stringify({
-      type: 'CreateMsg',
-      channel: 'spoqa',
-      msg: { userid: '-kakao-', usernick: name, txt: line },
-      msg_id: UUID.create().toString(),
-    }));
-  });
 });
 
 // 카카오톡으로부터 전달받은 데이터를 적당히 출력할 수 있는 string의 리스트로
@@ -141,49 +126,6 @@ function daum_search(att: Object): string {
 
   return `#${att.Q} ${att.L}`;
 }
-
-
-//
-// chat.hyeon.me (2)
-//
-const wsclient = new WebSocketClient();
-const wsconnect = (first_attempt = false) => {
-  if (first_attempt) { console.log('Reconnecting to chat.hyeon.me ...'); }
-  wsclient.connect('ws://localhost:4567/api');
-};
-
-wsclient.on('connect', function(con) {
-  console.log('Connected with chat.hyeon.me');
-  wsconnection = con;
-
-  con.on('message', msg => {
-    if (msg.type !== 'utf8') { return; }
-    const data = JSON.parse(msg.utf8Data);
-    if (data.type !== 'CreateMsg') { return; }
-    if (data.channel !== 'spoqa') { return; }
-
-    kakao.write(spoqa, `<${data.msg.usernick}> ${data.msg.txt}`);
-  });
-
-  con.on('close', _ => {
-    wsconnection = null;
-    console.log('Connection with chat.hyeon.me has been closed.');
-    wsconnect();
-  });
-  con.on('error', err => {
-    wsconnection = null;
-    console.log(`Connection with chat.hyeon.me has been destroyed: ${err.toString()}`);
-    wsconnect();
-  });
-});
-
-wsclient.on('connectFailed', err => {
-  wsconnection = null;
-  console.log(`Failed to connect with chat.hyeon.me: ${err.toString()}`);
-  wsconnect();
-});
-
-wsconnect(false);
 
 
 //
