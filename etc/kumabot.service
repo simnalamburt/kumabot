@@ -1,0 +1,9 @@
+[Unit]
+Description=Hyeon Kim's kakaotalk bot
+
+[Service]
+User=simnalamburt
+ExecStart=/usr/bin/node /home/simnalamburt/services/kumabot/build/main.js
+
+[Install]
+WantedBy=multi-user.target
