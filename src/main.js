@@ -53,13 +53,13 @@ kakao.on('message', data => {
   const { chat_id, user: { name, id: user_id }, message } = data;
 
   // Debug purpose
-  if (message.includes('쿠마봇')) {
+  if (message.includes('쿠마')) {
     console.log(`<@\x1b[33m${name}\x1b[0m \x1b[38;5;239m${user_id}\x1b[0m> ${message} \x1b[38;5;239m... ${chat_id}\x1b[0m`);
   }
 
   // PING-PONG protocol
   if (message.includes('이리온') && friends.indexOf(user_id) >= 0) {
-    kakao.write(chat_id, '냐옹');
+    kakao.write(chat_id, '쿠웡');
   }
 
   // Relay
