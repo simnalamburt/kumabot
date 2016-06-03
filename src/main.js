@@ -5,7 +5,7 @@ import UUID from 'uuid-js'
 import { client as WebSocketClient } from 'websocket'
 // $FlowIssue: Use a local installed package
 import Kakao from 'kakao'
-import { sKey, duuid, table, friends, spoqa } from '../config.json'
+import { sKey, duuid, table, friends } from '../config.json'
 import { invert } from './utils.js'
 
 
